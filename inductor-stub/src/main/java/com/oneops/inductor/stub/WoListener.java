@@ -84,14 +84,13 @@ public class WoListener implements MessageListener {
 
           Console console = System.console();
           for (int i = 0, batchSize = wos.size(); i < batchSize; i++) {
-            String state;
-            state = stateCycle[stateCycleCounter % stateCycle.length];
-            if (state.equals("?") || state.equals("prompt")) {
-              state = console.readLine("Complete or Fail? ('c', 'f'): ").toLowerCase().startsWith("c") ? "complete" : "failed";
-            }
-            Thread.sleep(this.sleepTime);
             CmsWorkOrderSimple wo = wos.get(i);
             CmsRfcCISimple rfc = wo.rfcCi;
+            String state = stateCycle[stateCycleCounter % stateCycle.length];
+            if (state.equals("?") || state.equals("prompt")) {
+              state = console.readLine("Listener " + listenerId + " [" + rfc.getCiClassName() + " " + rfc.getCiName() + "] - Complete or Fail? ('c', 'f'): ").toLowerCase().startsWith("c") ? "complete" : "failed";
+            }
+            Thread.sleep(this.sleepTime);
             processWorkOrder(wo, corelationId, state);
             log("processed work order " + rfc.getRfcId() + " - " + state.toUpperCase() + " (" + rfc.getCiClassName() + " " + rfc.getCiName() + ")");
             if (!"complete".equals(state) && i < batchSize - 1) {
