@@ -128,6 +128,15 @@ public class WoListener implements MessageListener {
       if (ci.getCiAttributes().containsKey("max_instances")) {
         ci.getCiAttributes().put("max_instances", "1500");
       }
+
+      boolean has_enabled = ao.getCi().getCiAttributes().containsKey("enabled");
+      if (ao.getActionName().equals("enable") && has_enabled) {
+        ci.getCiAttributes().put("enabled", "true");
+      }
+      else if (ao.getActionName().equals("disable") && has_enabled) {
+        ci.getCiAttributes().put("enabled", "false");
+      }
+
       ao.setResultCi(ci);
       responseMsg.setStringProperty("task_result_code", "200");
     } else {
